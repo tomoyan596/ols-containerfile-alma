@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
+#set -x
 OLS_VERSION=''
 PHP_VERSION=''
 PUSH=''
 CONFIG=''
 TAG=''
-BUILDER='litespeedtech'
-REPO='openlitespeed'
+#BUILDER='litespeedtech'
+BUILDER='tomoyan596'
+OS='alma'
+REPO='openlitespeed'-${OS}
 EPACE='        '
 ARCH='linux/amd64'
 
@@ -36,22 +39,24 @@ build_image(){
     if [ -z "${1}" ] || [ -z "${2}" ]; then
         help_message
     else
+        buildah --version
         echo "Build image: ${1} ${2}"
         #docker build . --tag ${BUILDER}/${REPO}:${1}-${2} --build-arg OLS_VERSION=${1} --build-arg PHP_VERSION=${2}
-        docker buildx build . --platform ${ARCH} --tag ${BUILDER}/${REPO}:${1}-${2} --build-arg OLS_VERSION=${1} --build-arg PHP_VERSION=${2} --output=type=registry
+        #buildah build . --platform ${ARCH} --tag ${BUILDER}/${REPO}:${1}-${2} --build-arg OLS_VERSION=${1} --build-arg PHP_VERSION=${2} --output=type=registry
+        buildah build --platform ${ARCH} --tag ${BUILDER}/${REPO}:${1}-${2} --build-arg OLS_VERSION=${1} --build-arg PHP_VERSION=${2} #--output=type=registry
     fi    
 }
 
 test_image(){
     echo "Test image"
-    ID=$(docker run -d ${BUILDER}/${REPO}:${1}-${2})
-    docker exec -i ${ID} su -c 'mkdir -p /var/www/vhosts/localhost/html/ \
+    ID=$(podman run -d ${BUILDER}/${REPO}:${1}-${2})
+    podman exec -i ${ID} bash -c 'mkdir -p /var/www/vhosts/localhost/html/ \
     && echo "<?php phpinfo();" > /var/www/vhosts/localhost/html/index.php \
     && /usr/local/lsws/bin/lswsctrl restart'
     sleep 5
-    HTTP=$(docker exec -i ${ID} curl -s -o /dev/null -Ik -w "%{http_code}" http://localhost)
-    HTTPS=$(docker exec -i ${ID} curl -s -o /dev/null -Ik -w "%{http_code}" https://localhost)
-    docker kill ${ID}
+    HTTP=$(podman exec -i ${ID} curl -s -o /dev/null -Ik -w "%{http_code}" http://localhost)
+    HTTPS=$(podman exec -i ${ID} curl -s -o /dev/null -Ik -w "%{http_code}" https://localhost)
+    podman kill ${ID}
     if [[ "${HTTP}" != "200" || "${HTTPS}" != "200" ]]; then
         echo '[X] Test failed!'
         echo "http://localhost returned ${HTTP}"
