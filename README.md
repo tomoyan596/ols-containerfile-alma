@@ -63,9 +63,9 @@ Sometimes you may want to install more packages from the default image, or some 
 
 For example,
 ```
-git clone https://github.com/litespeedtech/ols-dockerfiles.git
-cd ols-dockerfiles/template
-bash build.sh -O 1.7.16 -P lsphp81
+git clone --depth 1 https://github.com/tomoyan596/ols-containerfile-alma.git
+cd ols-containerfile-alma/template
+bash build.sh --ols 1.8.3 --php lsphp83
 ```
 
 ## Support & Feedback
