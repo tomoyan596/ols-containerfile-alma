@@ -4,7 +4,7 @@
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack) 
 [<img src="https://img.shields.io/twitter/follow/litespeedtech.svg?label=Follow&style=social">](https://twitter.com/litespeedtech)
 
-Install a lightweight OpenLiteSpeed container using either the Edge or Stable version in Ubuntu 24.04 Linux.
+Install a lightweight OpenLiteSpeed container using either the Edge or Stable version in AlmaLinux 9.5.
 
 ### Prerequisites
 *  [Install Docker](https://www.docker.com/)
@@ -14,7 +14,7 @@ The system will regulary build both OpenLiteSpeed Edge and Latest stable version
 
 |Component|Version|
 | :-------------: | :-------------: |
-|Linux|Ubuntu 24.04|
+|Linux|AlmaLinux 9.5|
 |OpenLiteSpeed|[Latest stable version](https://openlitespeed.org/release-log/version-1-8-x)|
 |PHP|[Latest stable version](http://rpms.litespeedtech.com/debian/)|
 
@@ -63,9 +63,9 @@ Sometimes you may want to install more packages from the default image, or some 
 
 For example,
 ```
-git clone https://github.com/litespeedtech/ols-dockerfiles.git
-cd ols-dockerfiles/template
-bash build.sh -O 1.7.16 -P lsphp81
+git clone --depth 1 https://github.com/tomoyan596/ols-containerfile-alma.git
+cd ols-containerfile-alma/template
+bash build.sh --ols 1.8.3 --php lsphp83
 ```
 
 ## Support & Feedback
